@@ -17,8 +17,8 @@ export function trimSymbols(string, size) {
 		return string;
 	}
 
-	let result = '';
    let count = 0;
+	const result = [];
 	const arr = [];
 
 	for (let symbol of string) {
@@ -28,12 +28,12 @@ export function trimSymbols(string, size) {
 	arr.forEach(symbol => {
 		if (result.at(-1) === symbol && size !== count) {
 			count++;
-			result += symbol;
+			result.push(symbol);
 		} else if (result.at(-1) !== symbol) {
 			count = 1;
-			result += symbol;
+			result.push(symbol);
 		}
 	});
-
-   return result;
+	
+   return result.join('');
 }
