@@ -10,7 +10,7 @@ export function createGetter(path) {
 	return function get(obj) {
 		if (!obj) return;
 
-		for (let [key, value] of Object.entries(obj)) {
+		for (const [key, value] of Object.entries(obj)) {
 			if (key === srcArr.at(-1) && typeof value !== 'object') {
 				return result = value;
 			} else if (typeof value === 'object') {

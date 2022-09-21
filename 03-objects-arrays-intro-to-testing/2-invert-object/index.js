@@ -9,12 +9,12 @@ export function invertObj(obj) {
 	}
 
 	if (obj === undefined) {
-		return undefined;
+		return;
 	}
 
 	const arr = [];
 
-	for (let [key, value] of Object.entries(obj)) {
+	for (const [key, value] of Object.entries(obj)) {
 		arr.push([value, key]);
 	}
 
