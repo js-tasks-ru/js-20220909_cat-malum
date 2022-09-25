@@ -11,9 +11,9 @@ export function createGetter(path) {
 		if (!obj) return;
 
 		for (const [key, value] of Object.entries(obj)) {
-			if (key === srcArr.at(-1) && typeof value !== 'object') {
+			if (key === srcArr.at(-1) && Object.prototype.toString.call(value) !== '[object Object]') {
 				return result = value;
-			} else if (typeof value === 'object') {
+			} else if (Object.prototype.toString.call(value) === '[object Object]') {
 				get(value);
 			}
 		};
