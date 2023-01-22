@@ -19,55 +19,6 @@ export default class ProductForm {
     discount: 0
   };
 
-  onSubmit = event => {
-    event.preventDefault();
-
-    this.save();
-  };
-
-  uploadImage = () => {
-    const fileInput = document.createElement('input');
-
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-
-    fileInput.onchange = async () => {
-      const [file] = fileInput.files;
-
-      if (file) {
-        const formData = new FormData();
-        const { uploadImage, imageListContainer } = this.subElements;
-
-        formData.append('image', file);
-
-        uploadImage.classList.add('is-loading');
-        uploadImage.disabled = true;
-
-        const result = await fetchJson('https://api.imgur.com/3/image', {
-          method: 'POST',
-          headers: {
-            Authorization: `Client-ID ${IMGUR_CLIENT_ID}`
-          },
-          body: formData,
-          referrer: ''
-        });
-
-        imageListContainer.firstElementChild.append(this.getImageItem(result.data.link, file.name));
-
-        uploadImage.classList.remove('is-loading');
-        uploadImage.disabled = false;
-
-        // Remove input from body
-        fileInput.remove();
-      }
-    };
-
-    // must be in body for IE
-    fileInput.hidden = true;
-    document.body.appendChild(fileInput);
-    fileInput.click();
-  };
-
   constructor (productId) {
     this.productId = productId;
   }
@@ -75,97 +26,87 @@ export default class ProductForm {
   template() {
     return `
       <div class="product-form">
-      <form data-element="productForm" class="form-grid">
-        <div class="form-group form-group__half_left">
-          <fieldset>
-            <label class="form-label">Название товара</label>
-            <input required
-              id="title"
-              value=""
-              type="text"
-              name="title"
+        <form data-element="productForm" class="form-grid">
+          <div class="form-group form-group__half_left">
+            <fieldset>
+              <label class="form-label">Название товара</label>
+              <input required
+                id="title"
+                value=""
+                type="text"
+                name="title"
+                class="form-control"
+                data-element="title"
+                placeholder="Название товара">
+            </fieldset>
+          </div>
+          <div class="form-group form-group__wide">
+            <label class="form-label">Описание</label>
+            <textarea required
+              id="description"
               class="form-control"
-              data-element="title"
-              placeholder="Название товара">
-          </fieldset>
-        </div>
-        <div class="form-group form-group__wide">
-          <label class="form-label">Описание</label>
-          <textarea required
-            id="description"
-            class="form-control"
-            name="description"
-            placeholder="Описание товара"></textarea>
-        </div>
-        <div class="form-group form-group__wide">
-          <label class="form-label">Фото</label>
-          <!-- imageListContainer -->
-          <div data-element="imageListContainer"></div>
-          <button data-element="uploadImage" type="button" class="button-primary-outline">
-            <span>Загрузить</span>
-          </button>
-        </div>
-        <div class="form-group form-group__half_left">
-          <label class="form-label">Категория</label>
-            ${this.createCategoriesSelect()}
-        </div>
-        <div class="form-group form-group__half_left form-group__two-col">
-          <fieldset>
-            <label class="form-label">Цена ($)</label>
+              name="description"
+              placeholder="Описание товара"></textarea>
+          </div>
+          <div class="form-group form-group__wide">
+            <label class="form-label">Фото</label>
+            <!-- imageListContainer -->
+            <div data-element="imageListContainer"></div>
+            <button data-element="uploadImage" type="button" class="button-primary-outline">
+              <span>Загрузить</span>
+            </button>
+          </div>
+          <div class="form-group form-group__half_left">
+            <label class="form-label">Категория</label>
+              ${this.createCategoriesSelect()}
+          </div>
+          <div class="form-group form-group__half_left form-group__two-col">
+            <fieldset>
+              <label class="form-label">Цена ($)</label>
+              <input required
+                id="price"
+                value=""
+                type="number"
+                name="price"
+                class="form-control"
+                placeholder="${this.defaultFormData.price}">
+            </fieldset>
+            <fieldset>
+              <label class="form-label">Скидка ($)</label>
+              <input required
+                id="discount"
+                value=""
+                type="number"
+                name="discount"
+                class="form-control"
+                placeholder="${this.defaultFormData.discount}">
+            </fieldset>
+          </div>
+          <div class="form-group form-group__part-half">
+            <label class="form-label">Количество</label>
             <input required
-              id="price"
+              id="quantity"
               value=""
               type="number"
-              name="price"
               class="form-control"
-              placeholder="${this.defaultFormData.price}">
-          </fieldset>
-          <fieldset>
-            <label class="form-label">Скидка ($)</label>
-            <input required
-              id="discount"
-              value=""
-              type="number"
-              name="discount"
-              class="form-control"
-              placeholder="${this.defaultFormData.discount}">
-          </fieldset>
-        </div>
-        <div class="form-group form-group__part-half">
-          <label class="form-label">Количество</label>
-          <input required
-            id="quantity"
-            value=""
-            type="number"
-            class="form-control"
-            name="quantity"
-            placeholder="${this.defaultFormData.quantity}">
-        </div>
-        <div class="form-group form-group__part-half">
-          <label class="form-label">Статус</label>
-          <select id="status" class="form-control" name="status">
-            <option value="1">Активен</option>
-            <option value="0">Неактивен</option>
-          </select>
-        </div>
-        <div class="form-buttons">
-          <button type="submit" name="save" class="button-primary-outline">
-            ${this.productId ? 'Сохранить' : 'Добавить'} товар
-          </button>
-        </div>
-      </form>
-    </div>
+              name="quantity"
+              placeholder="${this.defaultFormData.quantity}">
+          </div>
+          <div class="form-group form-group__part-half">
+            <label class="form-label">Статус</label>
+            <select id="status" class="form-control" name="status">
+              <option value="1">Активен</option>
+              <option value="0">Неактивен</option>
+            </select>
+          </div>
+          <div class="form-buttons">
+            <button type="submit" name="save" class="button-primary-outline">
+              ${this.productId ? 'Сохранить' : 'Добавить'} товар
+            </button>
+          </div>
+        </form>
+      </div>
     `;
-  }
-
-  async xrender () {
-    const productData = await fetchJson('url-1'); // 100ms
-    const categories = await fetchJson('url-2'); // 60ms
-    // ...logic
-    // total: 160ms
-
-    // R1 |-------|
-    //         R2 |----------|
   }
 
   async render () {
@@ -173,10 +114,6 @@ export default class ProductForm {
     const productPromise = this.productId
       ? this.loadProductData(this.productId)
       : [this.defaultFormData];
-
-    // R1 |-------|
-    // R2 |----------|
-    // 100ms
 
     const [categoriesData, productResponse] = await Promise.all([categoriesPromise, productPromise]);
     const [productData] = productResponse;
@@ -213,6 +150,49 @@ export default class ProductForm {
       <p>Извините, данный товар не существует</p>
     </div>`;
   }
+
+  uploadImage = () => {
+    const fileInput = document.createElement('input');
+
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+
+    fileInput.onchange = async () => {
+      const [file] = fileInput.files;
+
+      if (file) {
+        const formData = new FormData();
+        const { uploadImage, imageListContainer } = this.subElements;
+
+        formData.append('image', file);
+
+        uploadImage.classList.add('is-loading');
+        uploadImage.disabled = true;
+
+        const result = await fetchJson('https://api.imgur.com/3/image', {
+          method: 'POST',
+          headers: {
+            Authorization: `Client-ID ${IMGUR_CLIENT_ID}`
+          },
+          body: formData,
+          referrer: ''
+        });
+
+        imageListContainer.firstElementChild.append(this.getImageItem(result.data.link, file.name));
+
+        uploadImage.classList.remove('is-loading');
+        uploadImage.disabled = false;
+
+        fileInput.remove();
+      }
+    };
+  };
+
+  onSubmit = event => {
+    event.preventDefault();
+
+    this.save();
+  };
 
   async save() {
     const product = this.getFormData();
@@ -302,17 +282,6 @@ export default class ProductForm {
     return select.outerHTML;
   }
 
-  getSubElements(element) {
-    const subElements = {};
-    const elements = element.querySelectorAll('[data-element]');
-
-    for (const item of elements) {
-      subElements[item.dataset.element] = item;
-    }
-
-    return subElements;
-  }
-
   createImagesList() {
     const { imageListContainer } = this.subElements;
     const { images } = this.formData;
@@ -351,13 +320,26 @@ export default class ProductForm {
     uploadImage.addEventListener('click', this.uploadImage);
   }
 
+  getSubElements(element) {
+    const subElements = {};
+    const elements = element.querySelectorAll('[data-element]');
+
+    for (const item of elements) {
+      subElements[item.dataset.element] = item;
+    }
+
+    return subElements;
+  }
+
+  remove() {
+    if (this.element) {
+      this.element.remove();
+    }
+  }
+
   destroy() {
     this.remove();
     this.element = null;
     this.subElements = null;
-  }
-
-  remove() {
-    this.element.remove();
   }
 }

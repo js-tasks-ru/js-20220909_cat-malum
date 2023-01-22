@@ -5,7 +5,7 @@ const IMGUR_CLIENT_ID = '28aaa2e823b03b1';
 const BACKEND_URL = 'https://course-js.javascript.ru';
 
 export default class ProductForm {
-  element; // DOM element
+  element;
   subElements = {};
   defaultFormData = {
     title: '',
@@ -56,12 +56,10 @@ export default class ProductForm {
         uploadImage.classList.remove('is-loading');
         uploadImage.disabled = false;
 
-        // Remove input from body
         fileInput.remove();
       }
     });
 
-    // must be in body for IE
     fileInput.hidden = true;
     document.body.append(fileInput);
 
@@ -75,87 +73,87 @@ export default class ProductForm {
   template () {
     return `
       <div class="product-form">
-      <form data-element="productForm" class="form-grid">
-        <div class="form-group form-group__half_left">
-          <fieldset>
-            <label class="form-label">Название товара</label>
-            <input required
-              id="title"
-              value=""
-              type="text"
-              name="title"
+        <form data-element="productForm" class="form-grid">
+          <div class="form-group form-group__half_left">
+            <fieldset>
+              <label class="form-label">Название товара</label>
+              <input required
+                id="title"
+                value=""
+                type="text"
+                name="title"
+                class="form-control"
+                placeholder="Название товара">
+            </fieldset>
+          </div>
+          <div class="form-group form-group__wide">
+            <label class="form-label">Описание</label>
+            <textarea required
+              id="description"
               class="form-control"
-              placeholder="Название товара">
-          </fieldset>
-        </div>
-        <div class="form-group form-group__wide">
-          <label class="form-label">Описание</label>
-          <textarea required
-            id="description"
-            class="form-control"
-            name="description"
-            data-element="productDescription"
-            placeholder="Описание товара"></textarea>
-        </div>
-        <div class="form-group form-group__wide">
-          <label class="form-label">Фото</label>
-          <ul class="sortable-list" data-element="imageListContainer">
-            ${this.createImagesList()}
-          </ul>
-          <button data-element="uploadImage" type="button" class="button-primary-outline">
-            <span>Загрузить</span>
-          </button>
-        </div>
-        <div class="form-group form-group__half_left">
-          <label class="form-label">Категория</label>
-            ${this.createCategoriesSelect()}
-        </div>
-        <div class="form-group form-group__half_left form-group__two-col">
-          <fieldset>
-            <label class="form-label">Цена ($)</label>
+              name="description"
+              data-element="productDescription"
+              placeholder="Описание товара"></textarea>
+          </div>
+          <div class="form-group form-group__wide">
+            <label class="form-label">Фото</label>
+            <ul class="sortable-list" data-element="imageListContainer">
+              ${this.createImagesList()}
+            </ul>
+            <button data-element="uploadImage" type="button" class="button-primary-outline">
+              <span>Загрузить</span>
+            </button>
+          </div>
+          <div class="form-group form-group__half_left">
+            <label class="form-label">Категория</label>
+              ${this.createCategoriesSelect()}
+          </div>
+          <div class="form-group form-group__half_left form-group__two-col">
+            <fieldset>
+              <label class="form-label">Цена ($)</label>
+              <input required
+                id="price"
+                value=""
+                type="number"
+                name="price"
+                class="form-control"
+                placeholder="${this.defaultFormData.price}">
+            </fieldset>
+            <fieldset>
+              <label class="form-label">Скидка ($)</label>
+              <input required
+                id="discount"
+                value=""
+                type="number"
+                name="discount"
+                class="form-control"
+                placeholder="${this.defaultFormData.discount}">
+            </fieldset>
+          </div>
+          <div class="form-group form-group__part-half">
+            <label class="form-label">Количество</label>
             <input required
-              id="price"
+              id="quantity"
               value=""
               type="number"
-              name="price"
               class="form-control"
-              placeholder="${this.defaultFormData.price}">
-          </fieldset>
-          <fieldset>
-            <label class="form-label">Скидка ($)</label>
-            <input required
-              id="discount"
-              value=""
-              type="number"
-              name="discount"
-              class="form-control"
-              placeholder="${this.defaultFormData.discount}">
-          </fieldset>
-        </div>
-        <div class="form-group form-group__part-half">
-          <label class="form-label">Количество</label>
-          <input required
-            id="quantity"
-            value=""
-            type="number"
-            class="form-control"
-            name="quantity"
-            placeholder="${this.defaultFormData.quantity}">
-        </div>
-        <div class="form-group form-group__part-half">
-          <label class="form-label">Статус</label>
-          <select id="status" class="form-control" name="status">
-            <option value="1">Активен</option>
-            <option value="0">Неактивен</option>
-          </select>
-        </div>
-        <div class="form-buttons">
-          <button type="submit" name="save" class="button-primary-outline">
-            ${this.productId ? "Сохранить" : "Добавить"} товар
-          </button>
-        </div>
-      </form>
-    </div>
+              name="quantity"
+              placeholder="${this.defaultFormData.quantity}">
+          </div>
+          <div class="form-group form-group__part-half">
+            <label class="form-label">Статус</label>
+            <select id="status" class="form-control" name="status">
+              <option value="1">Активен</option>
+              <option value="0">Неактивен</option>
+            </select>
+          </div>
+          <div class="form-buttons">
+            <button type="submit" name="save" class="button-primary-outline">
+              ${this.productId ? "Сохранить" : "Добавить"} товар
+            </button>
+          </div>
+        </form>
+      </div>
     `;
   }
 
@@ -252,7 +250,7 @@ export default class ProductForm {
 
   dispatchEvent (id) {
     const event = this.productId
-      ? new CustomEvent('product-updated', { detail: id }) // new CustomEvent('click')
+      ? new CustomEvent('product-updated', { detail: id })
       : new CustomEvent('product-saved');
 
     this.element.dispatchEvent(event);
@@ -335,9 +333,6 @@ export default class ProductForm {
     productForm.addEventListener('submit', this.onSubmit);
     uploadImage.addEventListener('click', this.uploadImage);
 
-    /* TODO: will be removed in the next iteration of realization.
-       this logic will be implemented inside "SortableList" component
-    */
     imageListContainer.addEventListener('click', event => {
       if ('deleteHandle' in event.target.dataset) {
         event.target.closest('li').remove();

@@ -4,20 +4,17 @@
  * @returns {function} - function-getter which allow get value from object by set path
  */
 export function createGetter(path) {
-	const srcArr = path.split('.');
-	let result;
+	const pathElems = path.split('.');
 
-	return function get(obj) {
-		if (!obj) return;
+	return obj => {
+		let result = obj;
 
-		for (const [key, value] of Object.entries(obj)) {
-			if (key === srcArr.at(-1) && Object.prototype.toString.call(value) !== '[object Object]') {
-				return result = value;
-			} else if (Object.prototype.toString.call(value) === '[object Object]') {
-				get(value);
-			}
-		};
+		for (const item of pathElems) {
+			if (result === undefined) break;
+
+			result = result[item];
+		}
 
 		return result;
-	};
+	}
 }
