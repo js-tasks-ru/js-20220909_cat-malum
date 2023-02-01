@@ -130,9 +130,11 @@ export default class SortableTable {
   }
 
   getTableHeader() {
-    return `<div data-element="header" class="sortable-table__header sortable-table__row">
-      ${this.headersConfig.map(item => this.getHeaderRow(item)).join('')}
-    </div>`;
+    return `
+      <div data-element="header" class="sortable-table__header sortable-table__row">
+        ${this.headersConfig.map(item => this.getHeaderRow(item)).join('')}
+      </div>
+    `;
   }
 
   getHeaderRow({id, title, sortable}) {
@@ -160,7 +162,8 @@ export default class SortableTable {
     return `
       <div data-element="body" class="sortable-table__body">
         ${this.getTableRows(data)}
-      </div>`;
+      </div>
+    `;
   }
 
   getTableRows(data) {

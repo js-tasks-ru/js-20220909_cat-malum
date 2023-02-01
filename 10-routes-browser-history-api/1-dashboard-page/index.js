@@ -26,7 +26,6 @@ export default class Page {
 					<div data-element="customersChart" class="dashboard__chart_customers"></div>
 				</div>
 				<h3 class="block-title">Best sellers</h3>
-				<div data-element="sortableTable"></div>
 			</div>
 		`;
 	}
@@ -104,7 +103,11 @@ export default class Page {
 			const root = this.subElements[component];
 			const { element } = this.components[component];
 
-			root.append(element);
+			if (component === 'sortableTable') {
+				this.element.append(element);
+			} else {
+				root.append(element);
+			}
 		});
 	}
 
