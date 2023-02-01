@@ -1,5 +1,7 @@
 export default class NotificationMessage {
 	static activeNotification;
+	element;
+	timer;
 
 	constructor (string = '', {
 		duration = 2000,
@@ -12,7 +14,7 @@ export default class NotificationMessage {
 		this.render();
 	}
 
-	getNotificationMessage() {
+	getTemplate() {
 		return `
 			<div class="notification ${this.type}" style="--value:${this.duration / 1000}s">
 				<div class="timer"></div>
@@ -28,18 +30,20 @@ export default class NotificationMessage {
 
 	render() {
 		const wrapper = document.createElement('div');
-		wrapper.innerHTML = this.getNotificationMessage();
+
+		wrapper.innerHTML = this.getTemplate();
+		
 		this.element = wrapper.firstElementChild;
 	}
 
-	show(parent = document.body) {
+	show(target = document.body) {
 		if (NotificationMessage.activeNotification) {
 			NotificationMessage.activeNotification.remove();
 		}
 
-		parent.append(this.element);
+		target.append(this.element);
 
-		this.timerId = setTimeout(() => {
+		this.timer = setTimeout(() => {
 			this.remove();
 		}, this.duration);
 
@@ -47,7 +51,7 @@ export default class NotificationMessage {
 	}
 
 	remove() {
-		clearTimeout(this.timerId);
+		clearTimeout(this.timer);
 
 		if (this.element) {
 			this.element.remove();
